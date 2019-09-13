@@ -1,19 +1,30 @@
 package com.example.android.recipeapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 
+import com.example.android.recipeapp.viewmodel.RecipeViewModel;
+
 public class MainActivity extends AppCompatActivity {
 
-    MainActivityFragment mainActivityFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainActivityFragment = (MainActivityFragment) getSupportFragmentManager().findFragmentById(R.id.main_activity);
+        MainActivityFragment mainFragment = new MainActivityFragment();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        fragmentManager.beginTransaction()
+                .add(R.id.main_activity, mainFragment)
+                .commit();
 
     }
+
+
 }
