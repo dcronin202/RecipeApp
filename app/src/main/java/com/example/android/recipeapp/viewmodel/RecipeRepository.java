@@ -3,6 +3,9 @@ package com.example.android.recipeapp.viewmodel;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.android.recipeapp.data.JsonRecipeApi;
 import com.example.android.recipeapp.data.Recipe;
 
@@ -21,14 +24,14 @@ public class RecipeRepository {
 
     private static final String RECIPE_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/";
     private JsonRecipeApi jsonRecipeApi;
-    private ArrayList<Recipe> recipes;
+    private MutableLiveData<List<Recipe>> recipes;
 
 
     RecipeRepository(Application application) {
-        recipes = new ArrayList<Recipe>();
+        recipes = new MutableLiveData<>();
     }
 
-    public ArrayList<Recipe> getRecipeDetails() {
+    public LiveData<List<Recipe>> getRecipeDetails() {
         return recipes;
     }
 
@@ -55,6 +58,7 @@ public class RecipeRepository {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 onRecipeResponseReceived(response);
+                Log.d(LOG_TAG, "Response received.");
             }
 
             @Override
@@ -71,7 +75,7 @@ public class RecipeRepository {
 
             List<Recipe> recipeList = response.body();
             //ArrayList<Recipe> recipeDetails = (ArrayList<Recipe>) recipeResponse.getRecipeIngredients();
-            recipes.addAll(recipeList);
+            recipes.postValue(recipeList);
 
         } else {
             Log.e(LOG_TAG, "Code: " + response.code());
