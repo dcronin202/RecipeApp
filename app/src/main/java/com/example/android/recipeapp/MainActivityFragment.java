@@ -1,10 +1,12 @@
 package com.example.android.recipeapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -15,6 +17,7 @@ import com.example.android.recipeapp.data.Recipe;
 import com.example.android.recipeapp.viewmodel.RecipeViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivityFragment extends Fragment {
 
@@ -26,18 +29,24 @@ public class MainActivityFragment extends Fragment {
     private RecipeViewModel viewModel;
 
 
+    public MainActivityFragment() {
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        setupViewModel();
-
         View view = inflater.inflate(R.layout.activity_main, container, false);
+        Log.e(LOG_TAG, "In onCreateView");
 
         recipeRecyclerViewAdapter = new RecipeRecyclerViewAdapter(getActivity(), new ArrayList<Recipe>());
+
         recyclerView = view.findViewById(R.id.recyclerview_main);
         recyclerView.setAdapter(recipeRecyclerViewAdapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        setupViewModel();
 
         return view;
 
@@ -46,6 +55,15 @@ public class MainActivityFragment extends Fragment {
     private void setupViewModel() {
 
         viewModel = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+        viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable List<Recipe> recipes) {
+                if (recipes.size() > 0) {
+                    recipeRecyclerViewAdapter.updateRecipeList(recipes);
+                }
+            }
+        });
+
         viewModel.getRecipeList();
 
     }
