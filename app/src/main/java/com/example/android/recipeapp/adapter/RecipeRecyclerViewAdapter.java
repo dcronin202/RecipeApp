@@ -1,19 +1,23 @@
-package com.example.android.recipeapp;
+package com.example.android.recipeapp.adapter;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.recipeapp.SummmaryActivity;
+import com.example.android.recipeapp.R;
 import com.example.android.recipeapp.data.Recipe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,12 +25,14 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
 
     private static final String LOG_TAG = RecipeRecyclerViewAdapter.class.getSimpleName();
 
-    private List<Recipe> mRecipeDetails;
+    private List<Recipe> mRecipeListDetails;
     private Activity mContext;
+    private Recipe recipeDetails;
+
 
     public RecipeRecyclerViewAdapter(Activity mContext, List<Recipe> mRecipeDetails) {
         this.mContext = mContext;
-        this.mRecipeDetails = mRecipeDetails;
+        this.mRecipeListDetails = mRecipeDetails;
     }
 
 
@@ -41,25 +47,43 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
+        // TODO: change this to show # of ingredients for each recipe item
+        int ingredientSize = 4;
+
         Log.d(LOG_TAG, "onBindViewHolder called.");
-        final Recipe recipeDetails = mRecipeDetails.get(position);
+        final Recipe recipeDetails = mRecipeListDetails.get(position);
 
         viewHolder.recipeName.setText(String.valueOf(recipeDetails.getRecipeName()));
         viewHolder.servingSize.setText(String.valueOf(recipeDetails.getServingSize()));
+        viewHolder.ingredientSize.setText(String.valueOf(ingredientSize));
 
+        viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchRecipeDetails(mContext, recipeDetails.getRecipeId());
+                Toast.makeText(mContext, recipeDetails.getRecipeName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void launchRecipeDetails(Context context, int id) {
+        Intent intent = new Intent(context, SummmaryActivity.class);
+        intent.putExtra(SummmaryActivity.RECIPE_DETAILS, id);
+        context.startActivity(intent);
     }
 
     @Override
     public int getItemCount() {
-        if (mRecipeDetails == null) {
+        if (mRecipeListDetails == null) {
             return 0;
         } else {
-            return mRecipeDetails.size();
+            return mRecipeListDetails.size();
         }
     }
 
     public void updateRecipeList(List<Recipe> recipeContent) {
-        this.mRecipeDetails = recipeContent;
+        this.mRecipeListDetails = recipeContent;
         notifyDataSetChanged();
     }
 
@@ -68,6 +92,7 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
 
         TextView recipeName;
         TextView servingSize;
+        TextView ingredientSize;
         LinearLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
@@ -75,6 +100,7 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
 
             recipeName = itemView.findViewById(R.id.recipe_name);
             servingSize = itemView.findViewById(R.id.serving_size);
+            ingredientSize = itemView.findViewById(R.id.ingredients_size);
             parentLayout = itemView.findViewById(R.id.recipe_list_layout);
 
         }
