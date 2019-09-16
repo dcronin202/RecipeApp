@@ -17,6 +17,7 @@ public class RecipeViewModel extends AndroidViewModel {
     private static final String LOG_TAG = RecipeViewModel.class.getSimpleName();
 
     private RecipeRepository recipeRepository;
+    private Recipe recipeDetails;
 
 
     public RecipeViewModel(@NonNull Application application) {
@@ -24,6 +25,14 @@ public class RecipeViewModel extends AndroidViewModel {
         recipeRepository = new RecipeRepository(application);
         Log.d(LOG_TAG, "Actively retrieving recipes.");
 
+    }
+
+    public Recipe getRecipeDetails(){
+        return recipeDetails;
+    }
+
+    public void setRecipeDetails(Recipe recipe) {
+        this.recipeDetails = recipe;
     }
 
     public LiveData<List<Recipe>> getRecipes() {
