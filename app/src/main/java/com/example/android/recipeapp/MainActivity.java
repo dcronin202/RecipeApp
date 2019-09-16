@@ -2,11 +2,10 @@ package com.example.android.recipeapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 
-import com.example.android.recipeapp.viewmodel.RecipeViewModel;
+import com.example.android.recipeapp.fragment.MainActivityFragment;
 
 public class MainActivity extends AppCompatActivity {
 
