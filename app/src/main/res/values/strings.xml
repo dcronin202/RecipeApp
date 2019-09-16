@@ -1,3 +1,7 @@
 <resources>
+
     <string name="app_name">RecipeApp</string>
+
+    <string name="summary_button_text">Start cooking!</string>
+
 </resources>
