@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.android.recipeapp.data.JsonRecipeApi;
 import com.example.android.recipeapp.data.Recipe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -74,7 +73,6 @@ public class RecipeRepository {
         if (response.isSuccessful()) {
 
             List<Recipe> recipeList = response.body();
-            //ArrayList<Recipe> recipeDetails = (ArrayList<Recipe>) recipeResponse.getRecipeIngredients();
             recipes.postValue(recipeList);
 
         } else {
