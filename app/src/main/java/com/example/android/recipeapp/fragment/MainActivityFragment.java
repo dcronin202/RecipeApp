@@ -1,7 +1,6 @@
-package com.example.android.recipeapp;
+package com.example.android.recipeapp.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.recipeapp.R;
+import com.example.android.recipeapp.adapter.RecipeRecyclerViewAdapter;
 import com.example.android.recipeapp.data.Recipe;
 import com.example.android.recipeapp.viewmodel.RecipeViewModel;
 
@@ -36,8 +37,9 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        setupViewModel();
+
         View view = inflater.inflate(R.layout.activity_main, container, false);
-        Log.e(LOG_TAG, "In onCreateView");
 
         recipeRecyclerViewAdapter = new RecipeRecyclerViewAdapter(getActivity(), new ArrayList<Recipe>());
 
@@ -46,11 +48,10 @@ public class MainActivityFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        setupViewModel();
-
         return view;
 
     }
+
 
     private void setupViewModel() {
 
