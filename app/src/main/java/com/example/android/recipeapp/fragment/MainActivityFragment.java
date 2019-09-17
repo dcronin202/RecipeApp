@@ -39,7 +39,7 @@ public class MainActivityFragment extends Fragment {
 
         setupViewModel();
 
-        View view = inflater.inflate(R.layout.activity_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         recipeRecyclerViewAdapter = new RecipeRecyclerViewAdapter(getActivity(), new ArrayList<Recipe>());
 
