@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SummmaryActivity"></activity>
+        <activity android:name=".SummaryActivity"></activity>
 
     </application>
 
