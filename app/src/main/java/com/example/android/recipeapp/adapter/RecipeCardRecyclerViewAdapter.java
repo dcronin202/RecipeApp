@@ -21,15 +21,15 @@ import com.example.android.recipeapp.data.Recipe;
 import java.util.List;
 
 
-public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecyclerViewAdapter.ViewHolder> {
+public class RecipeCardRecyclerViewAdapter extends RecyclerView.Adapter<RecipeCardRecyclerViewAdapter.ViewHolder> {
 
-    private static final String LOG_TAG = RecipeRecyclerViewAdapter.class.getSimpleName();
+    private static final String LOG_TAG = RecipeCardRecyclerViewAdapter.class.getSimpleName();
 
     private List<Recipe> mRecipeListDetails;
     private Activity mContext;
 
 
-    public RecipeRecyclerViewAdapter(Activity mContext, List<Recipe> mRecipeDetails) {
+    public RecipeCardRecyclerViewAdapter(Activity mContext, List<Recipe> mRecipeDetails) {
         this.mContext = mContext;
         this.mRecipeListDetails = mRecipeDetails;
     }

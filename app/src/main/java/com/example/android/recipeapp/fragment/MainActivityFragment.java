@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.recipeapp.R;
-import com.example.android.recipeapp.adapter.RecipeRecyclerViewAdapter;
+import com.example.android.recipeapp.adapter.RecipeCardRecyclerViewAdapter;
 import com.example.android.recipeapp.data.Recipe;
 import com.example.android.recipeapp.viewmodel.RecipeViewModel;
 
@@ -26,7 +26,7 @@ public class MainActivityFragment extends Fragment {
     private static final String LOG_TAG = MainActivityFragment.class.getSimpleName();
 
     private RecyclerView recyclerView;
-    private RecipeRecyclerViewAdapter recipeRecyclerViewAdapter;
+    private RecipeCardRecyclerViewAdapter recipeRecyclerViewAdapter;
 
     private RecipeViewModel viewModel;
 
@@ -67,7 +67,7 @@ public class MainActivityFragment extends Fragment {
 
     private void populateRecipeCards(View parentView) {
 
-        recipeRecyclerViewAdapter = new RecipeRecyclerViewAdapter(getActivity(), new ArrayList<Recipe>());
+        recipeRecyclerViewAdapter = new RecipeCardRecyclerViewAdapter(getActivity(), new ArrayList<Recipe>());
 
         recyclerView = parentView.findViewById(R.id.recyclerview_main);
         recyclerView.setAdapter(recipeRecyclerViewAdapter);
