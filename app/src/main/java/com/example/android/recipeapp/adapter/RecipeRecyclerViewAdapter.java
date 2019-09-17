@@ -27,7 +27,6 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
 
     private List<Recipe> mRecipeListDetails;
     private Activity mContext;
-    private Recipe recipeDetails;
 
 
     public RecipeRecyclerViewAdapter(Activity mContext, List<Recipe> mRecipeDetails) {
@@ -47,7 +46,7 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
-        Log.d(LOG_TAG, "onBindViewHolder called.");
+        Log.d(LOG_TAG, "Recipe onBindViewHolder called.");
         final Recipe recipeDetails = mRecipeListDetails.get(position);
 
         viewHolder.recipeName.setText(String.valueOf(recipeDetails.getRecipeName()));
