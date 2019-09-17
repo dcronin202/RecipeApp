@@ -2,6 +2,9 @@
 
     <string name="app_name">RecipeApp</string>
 
+    <string name="summary_ingredients_header">Ingredients</string>
+    <string name="summary_serving_size">for %1$s servings</string>
+    <string name="summary_simple_steps_header">Preparation</string>
     <string name="summary_button_text">Start cooking!</string>
 
 </resources>
