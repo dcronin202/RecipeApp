@@ -14,7 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.android.recipeapp.SummmaryActivity;
+import com.example.android.recipeapp.SummaryActivity;
 import com.example.android.recipeapp.R;
 import com.example.android.recipeapp.data.Recipe;
 
@@ -47,29 +47,26 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
-        // TODO: change this to show # of ingredients for each recipe item
-        int ingredientSize = 4;
-
         Log.d(LOG_TAG, "onBindViewHolder called.");
         final Recipe recipeDetails = mRecipeListDetails.get(position);
 
         viewHolder.recipeName.setText(String.valueOf(recipeDetails.getRecipeName()));
         viewHolder.servingSize.setText(String.valueOf(recipeDetails.getServingSize()));
-        viewHolder.ingredientSize.setText(String.valueOf(ingredientSize));
+        viewHolder.ingredientSize.setText(String.valueOf(recipeDetails.getRecipeIngredients().size()));
 
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchRecipeDetails(mContext, recipeDetails.getRecipeId());
+                launchRecipeDetails(mContext, recipeDetails);
                 Toast.makeText(mContext, recipeDetails.getRecipeName(), Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-    private void launchRecipeDetails(Context context, int id) {
-        Intent intent = new Intent(context, SummmaryActivity.class);
-        intent.putExtra(SummmaryActivity.RECIPE_DETAILS, id);
+    private void launchRecipeDetails(Context context, Recipe recipe) {
+        Intent intent = new Intent(context, SummaryActivity.class);
+        intent.putExtra(SummaryActivity.RECIPE_DETAILS, recipe);
         context.startActivity(intent);
     }
 
