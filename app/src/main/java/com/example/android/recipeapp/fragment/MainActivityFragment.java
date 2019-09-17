@@ -20,6 +20,7 @@ import com.example.android.recipeapp.viewmodel.RecipeViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class MainActivityFragment extends Fragment {
 
     private static final String LOG_TAG = MainActivityFragment.class.getSimpleName();
@@ -37,16 +38,11 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        setupViewModel();
-
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        recipeRecyclerViewAdapter = new RecipeRecyclerViewAdapter(getActivity(), new ArrayList<Recipe>());
+        setupViewModel();
 
-        recyclerView = view.findViewById(R.id.recyclerview_main);
-        recyclerView.setAdapter(recipeRecyclerViewAdapter);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        populateRecipeCards(view);
 
         return view;
 
@@ -66,6 +62,17 @@ public class MainActivityFragment extends Fragment {
         });
 
         viewModel.getRecipeList();
+
+    }
+
+    private void populateRecipeCards(View parentView) {
+
+        recipeRecyclerViewAdapter = new RecipeRecyclerViewAdapter(getActivity(), new ArrayList<Recipe>());
+
+        recyclerView = parentView.findViewById(R.id.recyclerview_main);
+        recyclerView.setAdapter(recipeRecyclerViewAdapter);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
     }
 
