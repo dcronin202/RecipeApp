@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -46,11 +46,13 @@
                 android:paddingLeft="16dp"
                 android:paddingTop="8dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview_ingredients"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="Ingredients go here."/>
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:nestedScrollingEnabled="false"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -61,11 +63,12 @@
                 android:textStyle="bold"
                 android:text="@string/summary_simple_steps_header"/>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview_simple_steps"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="Recipe steps go here."/>
+                android:paddingTop="8dp"
+                android:nestedScrollingEnabled="false"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -75,6 +78,6 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
