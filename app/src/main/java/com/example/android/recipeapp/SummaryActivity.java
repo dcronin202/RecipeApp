@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.android.recipeapp.data.Recipe;
 import com.example.android.recipeapp.fragment.SummaryActivityFragment;
+import com.example.android.recipeapp.viewmodel.RecipeDetailViewModel;
 import com.example.android.recipeapp.viewmodel.RecipeViewModel;
 
 public class SummaryActivity extends AppCompatActivity {
@@ -26,7 +27,7 @@ public class SummaryActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Recipe recipeDetails = intent.getParcelableExtra(RECIPE_DETAILS);
 
-        RecipeViewModel viewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        RecipeDetailViewModel viewModel = ViewModelProviders.of(this).get(RecipeDetailViewModel.class);
 
         viewModel.setRecipeDetails(recipeDetails);
 
