@@ -7,4 +7,6 @@
     <string name="summary_simple_steps_header">Preparation</string>
     <string name="summary_button_text">Start cooking!</string>
 
+    <string name="summary_step_number">Step %1$s</string>
+
 </resources>
