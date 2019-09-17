@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.android.recipeapp.data.Recipe;
+import com.example.android.recipeapp.data.RecipeStep;
 
 import java.util.List;
 
