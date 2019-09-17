@@ -44,7 +44,7 @@ public class SimpleStepsRecyclerViewAdapter extends RecyclerView.Adapter<SimpleS
         Log.d(LOG_TAG, "Simple Steps onBindViewHolder called.");
         final RecipeStep simpleStepsDetails = mRecipeStepDetails.get(position);
 
-        viewHolder.stepId.setText(String.valueOf(simpleStepsDetails.getRecipeStepId()+1));
+        viewHolder.stepId.setText(String.valueOf(simpleStepsDetails.getRecipeStepId() + 1));
 
         viewHolder.stepContent.setText(simpleStepsDetails.getRecipeDescriptionShort());
 
