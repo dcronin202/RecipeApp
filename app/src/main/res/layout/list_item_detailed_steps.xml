@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/recipe_step_counter_list_item"
+        android:id="@+id/detailed_step_counter_list_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
