@@ -57,7 +57,7 @@ public class RecipeCardRecyclerViewAdapter extends RecyclerView.Adapter<RecipeCa
             @Override
             public void onClick(View view) {
                 launchRecipeDetails(mContext, recipeDetails);
-                Toast.makeText(mContext, recipeDetails.getRecipeName(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, recipeDetails.getRecipeName(), Toast.LENGTH_SHORT).show();
             }
         });
 
