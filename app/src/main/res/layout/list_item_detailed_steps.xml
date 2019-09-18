@@ -8,26 +8,23 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/detailed_step_counter_list_item"
+        android:id="@+id/details_step_counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:textStyle="bold"
-        android:text="Step 2 of 5"/>
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/video_url_list_item"
+        android:id="@+id/details_video_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="28dp"
-        android:text="Recipe video goes here." />
+        android:padding="28dp" />
 
     <TextView
-        android:id="@+id/detailed_step_text_list_item"
+        android:id="@+id/details_step_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Detailed recipe step goes here."/>
+        android:padding="16dp" />
 
 </LinearLayout>
