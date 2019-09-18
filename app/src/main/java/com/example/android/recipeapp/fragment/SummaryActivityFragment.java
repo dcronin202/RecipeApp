@@ -1,11 +1,16 @@
 package com.example.android.recipeapp.fragment;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,23 +19,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.recipeapp.R;
+import com.example.android.recipeapp.RecipeStepsActivity;
 import com.example.android.recipeapp.adapter.IngredientsRecyclerViewAdapter;
 import com.example.android.recipeapp.adapter.SimpleStepsRecyclerViewAdapter;
-import com.example.android.recipeapp.data.Ingredient;
 import com.example.android.recipeapp.data.Recipe;
-import com.example.android.recipeapp.data.RecipeStep;
 import com.example.android.recipeapp.viewmodel.RecipeDetailViewModel;
-import com.example.android.recipeapp.viewmodel.RecipeViewModel;
 
-import java.util.ArrayList;
+import java.util.List;
+
 
 public class SummaryActivityFragment extends Fragment {
 
     private static final String LOG_TAG = SummaryActivityFragment.class.getSimpleName();
 
-    public static final String RECIPE_DETAILS = "recipes";
-
     private RecipeDetailViewModel viewModel;
+    private Button button;
 
     private RecyclerView recyclerView;
     private IngredientsRecyclerViewAdapter ingredientsRecyclerViewAdapter;
@@ -50,6 +53,19 @@ public class SummaryActivityFragment extends Fragment {
         populateIngredientDetails(view);
 
         populateRecipeSteps(view);
+
+        final Recipe recipe = viewModel.getRecipeDetails();
+
+        button = view.findViewById(R.id.button_recipe_steps);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), RecipeStepsActivity.class);
+                intent.putExtra(RecipeStepsActivity.RECIPE_STEPS, recipe);
+                startActivity(intent);
+                Toast.makeText(view.getContext(), recipe.getRecipeName(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
 
