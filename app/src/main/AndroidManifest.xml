@@ -21,6 +21,8 @@
 
         <activity android:name=".SummaryActivity"></activity>
 
+        <activity android:name=".RecipeStepsActivity"></activity>
+
     </application>
 
 </manifest>
