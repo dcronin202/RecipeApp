@@ -10,8 +10,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.android.recipeapp.adapter.StepsPagerAdapter;
 import com.example.android.recipeapp.data.Recipe;
+import com.example.android.recipeapp.data.RecipeStep;
 import com.example.android.recipeapp.fragment.RecipeStepsFragment;
-import com.example.android.recipeapp.fragment.SummaryActivityFragment;
 import com.example.android.recipeapp.viewmodel.RecipeStepsViewModel;
 import com.google.android.material.tabs.TabLayout;
 
@@ -22,6 +22,7 @@ public class RecipeStepsActivity extends AppCompatActivity {
 
     public static final String RECIPE_STEPS = "recipe_steps";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,32 +31,38 @@ public class RecipeStepsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Recipe recipeStepDetails = intent.getParcelableExtra(RECIPE_STEPS);
 
+        setTitle(recipeStepDetails.getRecipeName());
+
         RecipeStepsViewModel viewModel = ViewModelProviders.of(this).get(RecipeStepsViewModel.class);
 
         viewModel.setRecipeStepDetails(recipeStepDetails);
 
-        SummaryActivityFragment stepsFragment = new SummaryActivityFragment();
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        setupViewPager(viewPager);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        fragmentManager.beginTransaction()
-                .replace(R.id.recipe_steps_activity_content, stepsFragment)
-                .commit();
-
-        //ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        //setupViewPager(viewPager);
-
-        //TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        //tabLayout.setupWithViewPager(viewPager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabDots);
+        tabLayout.setupWithViewPager(viewPager, true);
 
     }
 
     private void setupViewPager(ViewPager viewPager) {
 
         final StepsPagerAdapter adapter = new StepsPagerAdapter(getSupportFragmentManager());
+        RecipeStepsViewModel viewModel = ViewModelProviders.of(this).get(RecipeStepsViewModel.class);
 
-        adapter.addFragment(new RecipeStepsFragment(), "Step 1");
+        // Create a fragment tab for each recipe step
+        for (int stepIndex = 0; stepIndex < viewModel.getRecipeStepDetails().getRecipeSteps().size(); stepIndex++) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("recipeIndex", stepIndex);
 
+            RecipeStepsFragment stepsFragment = new RecipeStepsFragment();
+            stepsFragment.setArguments(bundle);
+
+            //adapter.addFragment(stepsFragment, String.valueOf(stepIndex));
+            adapter.addFragment(stepsFragment, "");
+        }
+
+        // Set adapter
         viewPager.setAdapter(adapter);
 
     }
