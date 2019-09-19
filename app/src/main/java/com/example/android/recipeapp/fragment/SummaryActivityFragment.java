@@ -1,9 +1,8 @@
 package com.example.android.recipeapp.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +23,16 @@ import com.example.android.recipeapp.adapter.IngredientsRecyclerViewAdapter;
 import com.example.android.recipeapp.adapter.SimpleStepsRecyclerViewAdapter;
 import com.example.android.recipeapp.data.Recipe;
 import com.example.android.recipeapp.viewmodel.RecipeDetailViewModel;
-
-import java.util.List;
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 
 public class SummaryActivityFragment extends Fragment {
@@ -38,6 +45,9 @@ public class SummaryActivityFragment extends Fragment {
     private RecyclerView recyclerView;
     private IngredientsRecyclerViewAdapter ingredientsRecyclerViewAdapter;
     private SimpleStepsRecyclerViewAdapter simpleStepsRecyclerViewAdapter;
+
+    private SimpleExoPlayer exoPlayer;
+    private PlayerView playerView;
 
 
     @Nullable
@@ -54,31 +64,16 @@ public class SummaryActivityFragment extends Fragment {
 
         populateRecipeSteps(view);
 
-        final Recipe recipe = viewModel.getRecipeDetails();
+        setButton(view);
 
-        button = view.findViewById(R.id.button_recipe_steps);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), RecipeStepsActivity.class);
-                intent.putExtra(RecipeStepsActivity.RECIPE_STEPS, recipe);
-                startActivity(intent);
-                Toast.makeText(view.getContext(), recipe.getRecipeName(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        initializePlayer(view);
 
         return view;
 
     }
 
     private void populateRecipeDetails(View view) {
-
         final Recipe recipe = viewModel.getRecipeDetails();
-
-        TextView overviewUrl = view.findViewById(R.id.overview_video_url);
-        overviewUrl.setText(recipe.getRecipeSteps()
-                .get(recipe.getRecipeSteps().size()-1)
-                .getRecipeVideoUrl());
 
         TextView recipeName = view.findViewById(R.id.overview_recipe_name);
         recipeName.setText(recipe.getRecipeName());
@@ -92,7 +87,6 @@ public class SummaryActivityFragment extends Fragment {
     }
 
     private void populateIngredientDetails(View parentView) {
-
         final Recipe recipe = viewModel.getRecipeDetails();
 
         recyclerView = parentView.findViewById(R.id.recyclerview_ingredients);
@@ -100,11 +94,9 @@ public class SummaryActivityFragment extends Fragment {
         ingredientsRecyclerViewAdapter = new IngredientsRecyclerViewAdapter(getActivity(), recipe.getRecipeIngredients());
         recyclerView.setAdapter(ingredientsRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
     }
 
     private void populateRecipeSteps(View parentView) {
-
         final Recipe recipe = viewModel.getRecipeDetails();
 
         recyclerView = parentView.findViewById(R.id.recyclerview_simple_steps);
@@ -112,7 +104,58 @@ public class SummaryActivityFragment extends Fragment {
         simpleStepsRecyclerViewAdapter = new SimpleStepsRecyclerViewAdapter(getActivity(), recipe.getRecipeSteps());
         recyclerView.setAdapter(simpleStepsRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
 
+    private void setButton(View view) {
+        final Recipe recipe = viewModel.getRecipeDetails();
+
+        button = view.findViewById(R.id.button_recipe_steps);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), RecipeStepsActivity.class);
+                intent.putExtra(RecipeStepsActivity.RECIPE_STEPS, recipe);
+                startActivity(intent);
+                Toast.makeText(view.getContext(), recipe.getRecipeName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // ExoPlayer Setup
+    private void initializePlayer(View view) {
+        final Recipe recipe = viewModel.getRecipeDetails();
+
+        playerView = view.findViewById(R.id.overview_player_view);
+        String videoUrl = recipe.getRecipeSteps().get(recipe.getRecipeSteps().size() - 1).getRecipeVideoUrl();
+
+        Uri videoUri = Uri.parse(videoUrl);
+        String applicationName = getResources().getString(R.string.app_name);
+
+        if (exoPlayer == null) {
+            exoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity());
+            playerView.setPlayer(exoPlayer);
+
+            exoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+            playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+
+            DataSource.Factory dataSourceFactory =
+                    new DefaultDataSourceFactory(getActivity(), Util.getUserAgent(getActivity(), applicationName));
+            MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(videoUri);
+            exoPlayer.prepare(videoSource);
+        }
+    }
+
+    private void releasePlayer() {
+        exoPlayer.stop();
+        exoPlayer.release();
+        exoPlayer = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        releasePlayer();
     }
 
 }
