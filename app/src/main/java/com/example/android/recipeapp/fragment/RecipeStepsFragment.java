@@ -1,22 +1,30 @@
 package com.example.android.recipeapp.fragment;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.example.android.recipeapp.R;
-import com.example.android.recipeapp.adapter.DetailedStepsRecyclerViewAdapter;
 import com.example.android.recipeapp.data.Recipe;
 import com.example.android.recipeapp.viewmodel.RecipeStepsViewModel;
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 
 public class RecipeStepsFragment extends Fragment {
@@ -24,6 +32,10 @@ public class RecipeStepsFragment extends Fragment {
     private static final String LOG_TAG = RecipeStepsFragment.class.getSimpleName();
 
     private RecipeStepsViewModel viewModel;
+    int recipeIndex = 0;
+
+    private SimpleExoPlayer exoPlayer;
+    private PlayerView playerView;
 
 
     @Nullable
@@ -34,37 +46,63 @@ public class RecipeStepsFragment extends Fragment {
 
         viewModel = ViewModelProviders.of(getActivity()).get(RecipeStepsViewModel.class);
 
-        populateMovieDetails(view);
+        if (getArguments() != null) {
+            recipeIndex = getArguments().getInt("recipeIndex");
+        }
+
+        populateStepDetails(view, recipeIndex);
+
+        initializePlayer(view, recipeIndex);
 
         return view;
 
     }
 
-    private void populateMovieDetails(View view) {
+    private void populateStepDetails(View view, int recipeIndex) {
 
         final Recipe recipe = viewModel.getRecipeStepDetails();
 
-        TextView recipeStepCount = view.findViewById(R.id.details_step_counter);
-        recipeStepCount.setText(recipe.getRecipeSteps().get(0).getRecipeStepId());
-
-        TextView videoUrl = view.findViewById(R.id.details_video_url);
-        videoUrl.setText(recipe.getRecipeSteps().get(0).getRecipeVideoUrl());
-
         TextView recipeStepContent = view.findViewById(R.id.details_step_content);
-        recipeStepContent.setText(recipe.getRecipeSteps().get(0).getRecipeDescriptionLong());
+        recipeStepContent.setText(String.valueOf(recipe.getRecipeSteps().get(recipeIndex).getRecipeDescriptionLong()));
 
     }
 
-    /*private void populateStepsDetails(View parentView) {
-
+    // ExoPlayer Setup
+    private void initializePlayer(View view, int recipeIndex) {
         final Recipe recipe = viewModel.getRecipeStepDetails();
 
-        recyclerView = parentView.findViewById(R.id.recyclerview_recipe_steps);
+        playerView = view.findViewById(R.id.details_step_player_view);
+        String videoUrl = recipe.getRecipeSteps().get(recipeIndex).getRecipeVideoUrl();
 
-        stepsRecyclerViewAdapter = new DetailedStepsRecyclerViewAdapter(getActivity(), recipe.getRecipeSteps());
-        recyclerView.setAdapter(stepsRecyclerViewAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        Uri videoUri = Uri.parse(videoUrl);
+        String applicationName = getResources().getString(R.string.app_name);
 
-    }*/
+        if (exoPlayer == null) {
+            exoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity());
+            playerView.setPlayer(exoPlayer);
+
+            exoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+            playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+
+            DataSource.Factory dataSourceFactory =
+                    new DefaultDataSourceFactory(getActivity(), Util.getUserAgent(getActivity(), applicationName));
+            MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(videoUri);
+            exoPlayer.prepare(videoSource);
+        }
+
+    }
+
+    private void releasePlayer() {
+        exoPlayer.stop();
+        exoPlayer.release();
+        exoPlayer = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        releasePlayer();
+    }
 
 }
