@@ -5,7 +5,8 @@ android {
     buildToolsVersion "29.0.0"
     defaultConfig {
         applicationId "com.example.android.recipeapp"
-        minSdkVersion 16
+        //minSdkVersion 16
+        minSdkVersion 26
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -17,6 +18,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    // For ExoPlayer
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -27,6 +32,8 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation "androidx.viewpager:viewpager:1.0.0"
     implementation 'com.google.android.material:material:1.0.0'
+
+    implementation 'com.google.android.exoplayer:exoplayer:2.10.4'
 
     implementation 'com.squareup.retrofit2:retrofit:2.6.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
