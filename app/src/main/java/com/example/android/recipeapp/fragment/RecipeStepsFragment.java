@@ -89,6 +89,11 @@ public class RecipeStepsFragment extends Fragment {
             MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(videoUri);
             exoPlayer.prepare(videoSource);
+
+        }
+
+        if (videoUrl.length() == 0) {
+            playerView.setVisibility(View.GONE);
         }
 
     }

@@ -24,6 +24,7 @@ import com.example.android.recipeapp.adapter.SimpleStepsRecyclerViewAdapter;
 import com.example.android.recipeapp.data.Recipe;
 import com.example.android.recipeapp.viewmodel.RecipeDetailViewModel;
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -136,13 +137,25 @@ public class SummaryActivityFragment extends Fragment {
             playerView.setPlayer(exoPlayer);
 
             exoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+            // Start playing automatically when video is loaded
+            exoPlayer.setPlayWhenReady(true);
+            // Loop player infinitely
+            exoPlayer.setRepeatMode(exoPlayer.REPEAT_MODE_ALL);
+            // Hide controller unless user taps on video
+            playerView.hideController();
             playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
 
             DataSource.Factory dataSourceFactory =
                     new DefaultDataSourceFactory(getActivity(), Util.getUserAgent(getActivity(), applicationName));
             MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(videoUri);
+
             exoPlayer.prepare(videoSource);
+
+        }
+
+        if (videoUrl.length() == 0) {
+            playerView.setVisibility(View.GONE);
         }
     }
 
