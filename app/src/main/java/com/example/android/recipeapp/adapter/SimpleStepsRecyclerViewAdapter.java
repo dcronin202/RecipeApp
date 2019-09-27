@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.recipeapp.R;
@@ -44,9 +45,13 @@ public class SimpleStepsRecyclerViewAdapter extends RecyclerView.Adapter<SimpleS
         Log.d(LOG_TAG, "Simple Steps onBindViewHolder called.");
         final RecipeStep simpleStepsDetails = mRecipeStepDetails.get(position);
 
-        viewHolder.stepId.setText(String.valueOf(simpleStepsDetails.getRecipeStepId() + 1));
+        //viewHolder.stepId.setText(String.valueOf(simpleStepsDetails.getRecipeStepId() + 1));
 
-        viewHolder.stepContent.setText(simpleStepsDetails.getRecipeDescriptionShort());
+        viewHolder.stepContent.setText(simpleStepsDetails.getRecipeDescriptionLong());
+
+        if (simpleStepsDetails.getRecipeStepId() == 0) {
+            viewHolder.stepContent.setVisibility(View.GONE);
+        }
 
     }
 
@@ -67,14 +72,14 @@ public class SimpleStepsRecyclerViewAdapter extends RecyclerView.Adapter<SimpleS
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView stepId;
+        //TextView stepId;
         TextView stepContent;
-        LinearLayout parentLayout;
+        ConstraintLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            stepId = itemView.findViewById(R.id.simple_step_id_list_item);
+            //stepId = itemView.findViewById(R.id.simple_step_id_list_item);
             stepContent = itemView.findViewById(R.id.simple_step_text_list_item);
             parentLayout = itemView.findViewById(R.id.simple_steps_list_layout);
         }
