@@ -12,8 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -95,6 +97,12 @@ public class SummaryActivityFragment extends Fragment {
         ingredientsRecyclerViewAdapter = new IngredientsRecyclerViewAdapter(getActivity(), recipe.getRecipeIngredients());
         recyclerView.setAdapter(ingredientsRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // Divider between ingredients
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        itemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider));
+        recyclerView.addItemDecoration(itemDecoration);
+
     }
 
     private void populateRecipeSteps(View parentView) {
@@ -154,9 +162,9 @@ public class SummaryActivityFragment extends Fragment {
 
         }
 
-        if (videoUrl.length() == 0) {
+        //if (videoUrl.length() == 0) {
             playerView.setVisibility(View.GONE);
-        }
+        //}
     }
 
     private void releasePlayer() {
