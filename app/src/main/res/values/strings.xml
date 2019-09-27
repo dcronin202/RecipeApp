@@ -12,5 +12,7 @@
 
     <string name="simple_step_number">Step %1$s</string>
     <string name="detailed_step_number">Step %1$s of %2$s</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>
