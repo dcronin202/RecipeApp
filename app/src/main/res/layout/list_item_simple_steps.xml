@@ -27,6 +27,7 @@
             android:id="@+id/simple_step_text_list_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
             android:padding="8dp" />
 
     </androidx.cardview.widget.CardView>
