@@ -8,7 +8,7 @@
     <string name="summary_ingredients_header">Ingredients</string>
     <string name="summary_serving_size">for %1$s servings</string>
     <string name="summary_simple_steps_header">Preparation</string>
-    <string name="summary_button_text">Start cooking!</string>
+    <string name="summary_button_text">Step-by-Step Mode</string>
 
     <string name="simple_step_number">Step %1$s</string>
     <string name="detailed_step_number">Step %1$s of %2$s</string>
