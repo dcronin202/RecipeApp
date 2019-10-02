@@ -29,11 +29,18 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class SummaryActivityBasicTest {
 
+    private static final String BUTTON_TEXT = "Step-by-Step Mode";
+
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void clickSummaryButtonTest() {
+    public void summaryButtonTextDisplayTest() throws Exception {
+
+        // Delay test so network call can be made
+        Thread.sleep(1000);
+
+        // Find and perform action on the view
         ViewInteraction linearLayout = onView(
                 allOf(withId(R.id.recipe_list_layout),
                 childAtPosition(allOf(withId(R.id.recyclerview_main),
@@ -42,15 +49,31 @@ public class SummaryActivityBasicTest {
 
         linearLayout.perform(click());
 
+        // Check if the button text is displayed correctly
+        onView(withId(R.id.button_recipe_steps)).check(matches(withText(BUTTON_TEXT)));
 
-         /* ViewInteraction summaryButton = onView(
-                allOf(withId(R.id.button_recipe_steps), withText("Step-by-Step Mode"),
+    }
+
+    @Test
+    public void summaryIngredientsDisplayTest() throws Exception {
+
+        Thread.sleep(1000);
+
+        ViewInteraction linearLayout = onView(
+                allOf(withId(R.id.recipe_list_layout),
+                childAtPosition(allOf(withId(R.id.recyclerview_main),
+                childAtPosition(withClassName(is("android.widget.LinearLayout")),
+                0)), 0), isDisplayed()));
+
+        linearLayout.perform(click());
+
+        ViewInteraction summaryIngredients = onView(
+                allOf(withId(R.id.recyclerview_ingredients),
                 childAtPosition(childAtPosition(withClassName(is("androidx.core.widget.NestedScrollView")),
-                0), 6), isDisplayed()));
+                0), 3)));
 
-        summaryButton.perform(click()); */
-
-        onView(withId(R.id.button_recipe_steps)).check(matches(withText("Step-by-Step Mode")));
+        // Check to confirm that Ingredients are displayed
+        summaryIngredients.check(matches(isDisplayed()));
 
     }
 
