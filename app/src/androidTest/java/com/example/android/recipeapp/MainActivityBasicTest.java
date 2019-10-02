@@ -36,7 +36,10 @@ public class MainActivityBasicTest {
             new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void clickRecipeCardTest() {
+    public void clickRecipeCardTest() throws Exception {
+
+        // Delay test so network call can be made
+        Thread.sleep(1000);
 
         // Find the view
         ViewInteraction linearLayout = onView(
