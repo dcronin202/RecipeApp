@@ -26,7 +26,7 @@ public class RecipeRepository {
     private MutableLiveData<List<Recipe>> recipes;
 
 
-    RecipeRepository(Application application) {
+    public RecipeRepository(Application application) {
         recipes = new MutableLiveData<>();
     }
 
