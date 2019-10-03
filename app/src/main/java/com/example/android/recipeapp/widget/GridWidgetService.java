@@ -1,4 +1,4 @@
-package com.example.android.recipeapp;
+package com.example.android.recipeapp.widget;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,15 @@ import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+
+import com.example.android.recipeapp.R;
 import com.example.android.recipeapp.data.Recipe;
+import com.example.android.recipeapp.viewmodel.RecipeRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +29,14 @@ public class GridWidgetService extends RemoteViewsService {
 
 }
 
-class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
+class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory, LifecycleOwner {
 
     private Context mContext;
     private Cursor mCursor;
     private List<Recipe> mRecipeItem = new ArrayList<Recipe>();
+    private RecipeRepository recipeRepository;
+    private List<Recipe> mRecipeListDetails;
+
 
     public GridRemoteViewsFactory(Context applicationContext) {
         mContext = applicationContext;
@@ -35,24 +46,21 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     public void onCreate() {
     }
 
+    public LiveData<List<Recipe>> getRecipes() {
+        return recipeRepository.getRecipeDetails();
+    }
+
     @Override
     public void onDataSetChanged() {
-
+        getRecipes().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(List<Recipe> recipes) {
+                // TODO:  ???
+            }
+        });
     }
 
-    @Override
-    public void onDestroy() {
-        mCursor.close();
-    }
-
-    @Override
-    public int getCount() {
-        if (mCursor == null) {
-            return 0;
-        }
-        return mCursor.getCount();
-    }
-
+    // TODO: ??
     @Override
     public RemoteViews getViewAt(int position) {
 
@@ -77,6 +85,19 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     }
 
     @Override
+    public void onDestroy() {
+        mCursor.close();
+    }
+
+    @Override
+    public int getCount() {
+        if (mCursor == null) {
+            return 0;
+        }
+        return mCursor.getCount();
+    }
+
+    @Override
     public RemoteViews getLoadingView() {
         return null;
     }
@@ -96,4 +117,9 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         return true;
     }
 
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return null;
+    }
 }
