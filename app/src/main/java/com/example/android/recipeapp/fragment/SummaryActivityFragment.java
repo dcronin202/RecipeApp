@@ -25,22 +25,9 @@ import com.example.android.recipeapp.adapter.IngredientsRecyclerViewAdapter;
 import com.example.android.recipeapp.adapter.SimpleStepsRecyclerViewAdapter;
 import com.example.android.recipeapp.data.Recipe;
 import com.example.android.recipeapp.viewmodel.RecipeDetailViewModel;
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
-import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 
 
 public class SummaryActivityFragment extends Fragment {
-
-    private static final String LOG_TAG = SummaryActivityFragment.class.getSimpleName();
 
     private RecipeDetailViewModel viewModel;
     private Button button;
@@ -48,9 +35,6 @@ public class SummaryActivityFragment extends Fragment {
     private RecyclerView recyclerView;
     private IngredientsRecyclerViewAdapter ingredientsRecyclerViewAdapter;
     private SimpleStepsRecyclerViewAdapter simpleStepsRecyclerViewAdapter;
-
-    private SimpleExoPlayer exoPlayer;
-    private PlayerView playerView;
 
 
     @Nullable
@@ -68,8 +52,6 @@ public class SummaryActivityFragment extends Fragment {
         populateRecipeSteps(view);
 
         setButton(view);
-
-        initializePlayer(view);
 
         return view;
 
@@ -125,58 +107,8 @@ public class SummaryActivityFragment extends Fragment {
                 Intent intent = new Intent(view.getContext(), RecipeStepsActivity.class);
                 intent.putExtra(RecipeStepsActivity.RECIPE_STEPS, recipe);
                 startActivity(intent);
-                Toast.makeText(view.getContext(), recipe.getRecipeName(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    // ExoPlayer Setup
-    private void initializePlayer(View view) {
-        final Recipe recipe = viewModel.getRecipeDetails();
-
-        playerView = view.findViewById(R.id.overview_player_view);
-        String videoUrl = recipe.getRecipeSteps().get(recipe.getRecipeSteps().size() - 1).getRecipeVideoUrl();
-
-        Uri videoUri = Uri.parse(videoUrl);
-        String applicationName = getResources().getString(R.string.app_name);
-
-        if (exoPlayer == null) {
-            exoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity());
-            playerView.setPlayer(exoPlayer);
-
-            exoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
-            // Start playing automatically when video is loaded
-            exoPlayer.setPlayWhenReady(true);
-            // Loop player infinitely
-            exoPlayer.setRepeatMode(exoPlayer.REPEAT_MODE_ALL);
-            // Hide controller unless user taps on video
-            playerView.hideController();
-            playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
-
-            DataSource.Factory dataSourceFactory =
-                    new DefaultDataSourceFactory(getActivity(), Util.getUserAgent(getActivity(), applicationName));
-            MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(videoUri);
-
-            exoPlayer.prepare(videoSource);
-
-        }
-
-        //if (videoUrl.length() == 0) {
-            playerView.setVisibility(View.GONE);
-        //}
-    }
-
-    private void releasePlayer() {
-        exoPlayer.stop();
-        exoPlayer.release();
-        exoPlayer = null;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        releasePlayer();
     }
 
 }
