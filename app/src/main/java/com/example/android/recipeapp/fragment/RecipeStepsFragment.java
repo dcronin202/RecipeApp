@@ -81,7 +81,7 @@ public class RecipeStepsFragment extends Fragment {
             exoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity());
             playerView.setPlayer(exoPlayer);
 
-            exoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+            //exoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
             playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
 
             DataSource.Factory dataSourceFactory =
