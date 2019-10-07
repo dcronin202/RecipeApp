@@ -45,10 +45,10 @@
 
                 <TextView
                     android:id="@+id/serving_size"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
                     android:textSize="18sp"/>
 
                 <TextView
@@ -61,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="textEnd"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
                     android:text="@string/main_ingredients_header"
                     android:textSize="18sp"/>
 

@@ -24,7 +24,7 @@
         android:id="@+id/ingredient_measure_list_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/ingredient_quantity_list_item"
         app:layout_constraintTop_toTopOf="parent"
