@@ -6,9 +6,9 @@ The app also features a widget that displays smaller versions of the recipe card
 
 ## Libraries Used
 
-* [Retrofit] (https://square.github.io/retrofit/)
-* [ExoPlayer] (https://exoplayer.dev/)
-* [Espresso] (https://developer.android.com/training/testing/espresso)
+* [Retrofit](https://square.github.io/retrofit/)
+* [ExoPlayer](https://exoplayer.dev/)
+* [Espresso](https://developer.android.com/training/testing/espresso)
 
 ## Screenshots
 
