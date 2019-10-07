@@ -4,7 +4,7 @@ This app displays a list of baking recipes and allows users to follow guided ste
 
 The app also features a widget that displays smaller versions of the recipe cards. When the user clicks on a card, they are taken to the screen that has the recipe's ingredients and list of instructions.
 
-## Libraries Used
+## Uses
 
 * [Retrofit](https://square.github.io/retrofit/)
 * [ExoPlayer](https://exoplayer.dev/)
