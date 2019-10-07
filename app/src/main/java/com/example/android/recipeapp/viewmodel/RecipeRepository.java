@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.android.recipeapp.data.JsonRecipeApi;
 import com.example.android.recipeapp.data.Recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -63,6 +64,8 @@ public class RecipeRepository {
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
+                recipes.postValue(new ArrayList<Recipe>());
+
             }
         });
 
@@ -77,6 +80,7 @@ public class RecipeRepository {
 
         } else {
             Log.e(LOG_TAG, "Code: " + response.code());
+            recipes.postValue(new ArrayList<Recipe>());
 
         }
     }
