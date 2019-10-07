@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -23,12 +24,12 @@ import java.util.List;
 
 public class MainActivityFragment extends Fragment {
 
-    private static final String LOG_TAG = MainActivityFragment.class.getSimpleName();
-
     private RecyclerView recyclerView;
     private RecipeCardRecyclerViewAdapter recipeRecyclerViewAdapter;
 
     private RecipeViewModel viewModel;
+
+    private TextView errorMessage;
 
 
     public MainActivityFragment() {
@@ -40,40 +41,48 @@ public class MainActivityFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        setupViewModel();
+        recipeRecyclerViewAdapter = new RecipeCardRecyclerViewAdapter(getActivity(), new ArrayList<Recipe>());
+        recyclerView = view.findViewById(R.id.recyclerview_main);
+        recyclerView.setAdapter(recipeRecyclerViewAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        populateRecipeCards(view);
+        errorMessage = view.findViewById(R.id.error_message_display);
+
+        setupViewModel();
 
         return view;
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchContent();
+    }
 
     private void setupViewModel() {
-
         viewModel = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+
+    }
+
+    private void fetchContent() {
         viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(@Nullable List<Recipe> recipes) {
                 if (recipes.size() > 0) {
                     recipeRecyclerViewAdapter.updateRecipeList(recipes);
+
+                    recyclerView.setVisibility(View.VISIBLE);
+                    errorMessage.setVisibility(View.GONE);
+
+                } else {
+                    errorMessage.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }
             }
         });
 
         viewModel.getRecipeList();
-
-    }
-
-    private void populateRecipeCards(View parentView) {
-
-        recipeRecyclerViewAdapter = new RecipeCardRecyclerViewAdapter(getActivity(), new ArrayList<Recipe>());
-
-        recyclerView = parentView.findViewById(R.id.recyclerview_main);
-        recyclerView.setAdapter(recipeRecyclerViewAdapter);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
     }
 
 }
