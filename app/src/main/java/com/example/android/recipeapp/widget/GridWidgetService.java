@@ -1,9 +1,13 @@
 package com.example.android.recipeapp.widget;
 
+import android.app.Application;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -14,11 +18,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
 import com.example.android.recipeapp.R;
+import com.example.android.recipeapp.SummaryActivity;
 import com.example.android.recipeapp.data.Recipe;
 import com.example.android.recipeapp.viewmodel.RecipeRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class GridWidgetService extends RemoteViewsService {
 
@@ -31,19 +37,23 @@ public class GridWidgetService extends RemoteViewsService {
 
 class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory, LifecycleOwner {
 
+
     private Context mContext;
-    private Cursor mCursor;
-    private List<Recipe> mRecipeItem = new ArrayList<Recipe>();
     private RecipeRepository recipeRepository;
     private List<Recipe> mRecipeListDetails;
 
 
     public GridRemoteViewsFactory(Context applicationContext) {
         mContext = applicationContext;
+        mRecipeListDetails = new ArrayList<>();
     }
 
     @Override
     public void onCreate() {
+        if (recipeRepository == null) {
+            recipeRepository = new RecipeRepository((Application)mContext);
+        }
+        recipeRepository.callRecipes();
     }
 
     public LiveData<List<Recipe>> getRecipes() {
@@ -52,29 +62,35 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory, L
 
     @Override
     public void onDataSetChanged() {
-        getRecipes().observe(this, new Observer<List<Recipe>>() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
-            public void onChanged(List<Recipe> recipes) {
-                // TODO:  ???
+            public void run() {
+                getRecipes().observeForever(new Observer<List<Recipe>>() {
+                    @Override
+                    public void onChanged(List<Recipe> recipes) {
+                        int previousCount = getCount();
+                        mRecipeListDetails = recipes;
+                        if (mRecipeListDetails.size() != previousCount) {
+                            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(mContext);
+                            ComponentName thisWidget = new ComponentName(mContext.getApplicationContext(), RecipeWidgetProvider.class);
+                            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+                            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.grid_view);
+                        }
+                    }
+                });
             }
         });
+
     }
 
-    // TODO: ??
     @Override
     public RemoteViews getViewAt(int position) {
 
-        if (mCursor == null || mCursor.getCount() == 0) {
-            return null;
-        }
-
-        mCursor.moveToPosition(position);
-
         RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_recipe_item);
-        remoteViews.setTextViewText(R.id.appwidget_recipe_name, mRecipeItem.get(position).getRecipeName());
+        remoteViews.setTextViewText(R.id.appwidget_recipe_name, mRecipeListDetails.get(position).getRecipeName());
 
         Bundle extras = new Bundle();
-        extras.putInt(RecipeWidgetProvider.EXTRA_ITEM, position);
+        extras.putParcelable(SummaryActivity.RECIPE_DETAILS,  mRecipeListDetails.get(position));
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(extras);
 
@@ -86,15 +102,14 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory, L
 
     @Override
     public void onDestroy() {
-        mCursor.close();
     }
 
     @Override
     public int getCount() {
-        if (mCursor == null) {
+        if (mRecipeListDetails == null) {
             return 0;
         }
-        return mCursor.getCount();
+        return mRecipeListDetails.size();
     }
 
     @Override
