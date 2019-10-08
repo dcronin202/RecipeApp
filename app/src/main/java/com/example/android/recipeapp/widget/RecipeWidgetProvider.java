@@ -3,49 +3,60 @@ package com.example.android.recipeapp.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.example.android.recipeapp.MainActivity;
 import com.example.android.recipeapp.R;
 import com.example.android.recipeapp.SummaryActivity;
+
+import java.util.Objects;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class RecipeWidgetProvider extends AppWidgetProvider {
 
-    public static final String EXTRA_ITEM = "extra_item";
+    private static final String INTENT_UPDATE_ACTION = "android.appwidget.action.APPWIDGET_UPDATE";
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int[] appWidgetId) {
+                                int appWidgetId) {
 
         // Construct the RemoteViews object
-        RemoteViews views;
-
-        /* Intent to launch MainActivity when clicked
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-        // Launch pending intent
-        views.setOnClickPendingIntent(R.id.appwidget_recipe_name, pendingIntent);*/
-
-        views = getRecipeGridRemoteView(context);
+        RemoteViews remoteViews = getRecipeGridRemoteView(context, appWidgetId);
 
         // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+        if (intent != null) {
+            if (Objects.equals(INTENT_UPDATE_ACTION, intent.getAction())) {
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                ComponentName thisWidget = new ComponentName(context.getApplicationContext(), RecipeWidgetProvider.class);
+                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+
+                for (int i = 0; i < appWidgetIds.length; i++) {
+                    RemoteViews remoteViews = getRecipeGridRemoteView(context, appWidgetIds[i]);
+
+                    appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
+                    appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.grid_view);
+                    onUpdate(context, appWidgetManager, appWidgetIds);
+                }
+            }
+        }
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
-            RecipeIntentService.startActionUpdateRecipeWidget(context);
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId);
+        }
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     @Override
@@ -58,7 +69,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    private static RemoteViews getRecipeGridRemoteView(Context context) {
+    private static RemoteViews getRecipeGridRemoteView(Context context, int appWidgetId) {
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_grid_view);
 
@@ -68,10 +79,8 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
         // Set the SummaryActivity to launch when clicked
         Intent appIntent = new Intent(context, SummaryActivity.class);
-        PendingIntent appPendingIntent =
-                PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setPendingIntentTemplate(R.id.grid_view, appPendingIntent);
-        remoteViews.setOnClickPendingIntent(R.id.grid_view, appPendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setPendingIntentTemplate(R.id.grid_view, pendingIntent);
 
         // If no recipes are found
         remoteViews.setEmptyView(R.id.grid_view, R.id.empty_view);
